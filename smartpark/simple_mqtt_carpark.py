@@ -1,5 +1,4 @@
 from datetime import datetime
-
 import mqtt_device
 import paho.mqtt.client as paho
 from paho.mqtt.client import MQTTMessage
