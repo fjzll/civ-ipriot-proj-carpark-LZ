@@ -1,7 +1,7 @@
-import json
 import mqtt_device
 import time
 from sense_emu import SenseHat
+import config_parser
 
 
 class Display(mqtt_device.MqttDevice):
@@ -36,10 +36,9 @@ class Display(mqtt_device.MqttDevice):
 
 
 if __name__ == '__main__':
-    # Read config from config.json file
-    file_name = open('config.json', 'r')
-    config = json.load(file_name)
+    # Read config from config.json file by calling the parse_config method
+    config = config_parser.parse_config('config.json')
     # Create an instance of Display class
     display = Display(config)
-    file_name.close()
+
 

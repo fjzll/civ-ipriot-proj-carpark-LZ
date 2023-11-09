@@ -2,7 +2,7 @@ from datetime import datetime
 import mqtt_device
 import paho.mqtt.client as paho
 from paho.mqtt.client import MQTTMessage
-import json
+import config_parser
 
 
 class CarPark(mqtt_device.MqttDevice):
@@ -64,9 +64,8 @@ class CarPark(mqtt_device.MqttDevice):
 
 if __name__ == '__main__':
     # Read config from json file  Lili Zheng
-    file_name = open('config.json', 'r')
-    config = json.load(file_name)
+    config = config_parser.parse_config('config.json')
     car_park = CarPark(config)
     print("Car park initialized")
-    file_name.close()
+
 
