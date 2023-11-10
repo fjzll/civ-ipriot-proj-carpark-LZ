@@ -27,7 +27,7 @@ class CarPark(mqtt_device.MqttDevice):
     @property
     def temperature(self):
         return self._temperature
-    
+
     @temperature.setter
     def temperature(self, value):
         self._temperature = value
@@ -54,16 +54,18 @@ class CarPark(mqtt_device.MqttDevice):
         payload = msg.payload.decode()
         # self.temperature = ... # Extracted value
         # Extract temperature from payload
-        if msg.topic == "temperature":
+        if msg.topic == 'temperature':
             self.temperature = float(payload)
-        if 'exit' in payload:
-            self.on_car_exit()
-        else:
-            self.on_car_entry()
+
+        if msg.topic == 'sensor':
+            if 'exited' in payload:
+                self.on_car_exit()
+            else:
+                self.on_car_entry()
 
 
 if __name__ == '__main__':
-    # Read config from json file  Lili Zheng
+    # Read config using the parse_config function from config_parser module
     config = config_parser.parse_config('config.json')
     car_park = CarPark(config)
     print("Car park initialized")

@@ -3,6 +3,7 @@ a publication via mqtt"""
 from sense_emu import SenseHat
 import mqtt_device
 import config_parser
+from datetime import datetime
 
 
 class Sensor(mqtt_device.MqttDevice):
@@ -20,6 +21,8 @@ class Sensor(mqtt_device.MqttDevice):
 
     def on_detection(self, message):
         """Triggered when a detection occurs"""
+        temperature = self.read_temperature
+        self.client.publish('temperature', str(temperature))
         self.client.publish('sensor', message)
 
     def start_sensing(self):
@@ -29,12 +32,12 @@ class Sensor(mqtt_device.MqttDevice):
             print("Press E when 🚗 entered!")
             print("Press X when 🚖 exited!")
             detection = input("E or X> ").upper()
+            readable_time = datetime.now().strftime('%H:%M')
+            temperature = self.read_temperature
             if detection == 'E':
-                temperature = self.read_temperature
-                self.on_detection(f"entered, {temperature}")
+                self.on_detection(f"entered, {temperature}, {readable_time}")
             else:
-                temperature = self.read_temperature
-                self.on_detection(f"exited, {temperature}")
+                self.on_detection(f"exited, {temperature}, {readable_time}")
 
 
 if __name__ == '__main__':

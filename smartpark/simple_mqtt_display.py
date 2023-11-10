@@ -21,7 +21,7 @@ class Display(mqtt_device.MqttDevice):
         print('*' * 20)
         # Display arguments in SenseHat LED matrix
         for val in args:
-            self.sense_hat.show_message(val, text_colour=yellow, back_colour=blue)
+            self.sense_hat.show_message(val, scroll_speed=0.1, text_colour=yellow, back_colour=blue)
             time.sleep(1)
         print('*' * 20)
 
@@ -29,10 +29,10 @@ class Display(mqtt_device.MqttDevice):
         data = msg.payload.decode()
         # Parse the message and extract free spaces, temperature, time
         current_time = data.split('TIME: ')[1].split(', ')[0]
-        spaces = data.split('SPACES: ')[1].split(', ')[0]
-        temperature = data.split('TEMPERATURE: ')[1].split(', ')[0]
+        spaces = int(data.split('SPACES: ')[1].split(', ')[0])
+        temperature = float(data.split('TEMPERATURE: ')[1].split(', ')[0])
         # Display the extracted values on Sense Hat emulator
-        self.display(f"Time: {current_time}", f"Free spaces: {spaces}", f"Temperature: {temperature}°C")
+        self.display(f"Time: {current_time}", f"Spaces: {spaces}", f"Temperature: {temperature}°C")
 
 
 if __name__ == '__main__':
