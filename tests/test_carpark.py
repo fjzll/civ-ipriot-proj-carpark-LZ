@@ -28,8 +28,8 @@ class TestCarPark(unittest.TestCase):
         config = parse_config("config.json")
         # Create an CarPark instance
         car_park2 = CarPark(config)
-        car_park2.total_cars = 131
-        car_park2.available_spaces()
+        car_park2.total_cars = 130
+        car_park2.on_car_entry()
         expected_available_spaces = 0
         # Assert that the actual and expect available spaces match
         self.assertEqual(car_park2.available_spaces, expected_available_spaces)
