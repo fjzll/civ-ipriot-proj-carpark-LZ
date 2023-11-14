@@ -10,8 +10,8 @@ class CarPark(mqtt_device.MqttDevice):
 
     def __init__(self, config):
         super().__init__(config)
-        self.total_spaces = config['total-spaces']
-        self.total_cars = config['total-cars']
+        self.total_spaces = config["CarParks"][0]['total-spaces']
+        self.total_cars = config["CarParks"][0]['total-cars']
         self.client = paho.Client()
         self.client.on_message = self.on_message
         self.client.subscribe('sensor')
@@ -69,5 +69,3 @@ if __name__ == '__main__':
     config = config_parser.parse_config('config.json')
     car_park = CarPark(config)
     print("Car park initialized")
-
-

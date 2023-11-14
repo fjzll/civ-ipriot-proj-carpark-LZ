@@ -8,19 +8,23 @@
             "location": "Moondalup",
             "broker": "localhost",
             "port": 1883,
+            "topic-root": "carpark",
             "Sensors": [
                 {
                     "name": "sensor1",
-                    "type": "entry"
+                    "type": "entry",
+                    "topic-qualifier": "entry"
                 },
                 {
                     "name": "sensor2",
-                    "type": "exit"
+                    "type": "exit",
+                    "topic-qualifier": "exit"
                 }
             ],
             "Displays": [
                 {
-                    "name": "display1"
+                    "name": "display1",
+                    "topic-qualifier": "display"
                 }
             ]
         }
