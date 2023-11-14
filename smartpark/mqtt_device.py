@@ -30,8 +30,8 @@ class MqttDevice:
         self.client.connect(self.broker, self.port)
 
     def _create_topic_string(self):
-        topic_string = []
+        topic_string = ""
         for device in self.devices:
-            topic_string.append(f"{self.topic_root}/{self.location}/{self.name}/"
-                                f"{device['name']}/{device['topic_qualifier']}")
+            topic_string = (f"{self.topic_root}/{self.location}/{self.name}/"
+                            f"{device['name']}/{device['topic_qualifier']}")
         return topic_string

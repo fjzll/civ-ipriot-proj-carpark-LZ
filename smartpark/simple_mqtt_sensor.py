@@ -10,8 +10,10 @@ class Sensor(mqtt_device.MqttDevice):
     def __init__(self, config):
         # Initialise the Sensor class with MQTT super class configuration
         super().__init__(config)
+        self.client.loop_start()
         # Create an instance for SenseHat object
         self.sense_hat = SenseHat()
+        print("Sensor: MQTT Connection: ", self.client.is_connected())
 
     @property
     def read_temperature(self):
@@ -24,13 +26,15 @@ class Sensor(mqtt_device.MqttDevice):
         temperature = self.read_temperature
         self.client.publish('temperature', str(temperature))
         self.client.publish('sensor', message)
+        print("Sensor: publishing sensor event: ", message)
+        print("MQTT messages published")
 
     def start_sensing(self):
         """ A blocking event loop that waits for detection events, in this
         case Enter presses"""
         while True:
-            print("Press E when 🚗 entered!")
-            print("Press X when 🚖 exited!")
+            print("Press E when car entered!")
+            print("Press X when car exited!")
             detection = input("E or X> ").upper()
             readable_time = datetime.now().strftime('%H:%M')
             temperature = self.read_temperature

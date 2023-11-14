@@ -1,8 +1,7 @@
 from datetime import datetime
 import mqtt_device
-import paho.mqtt.client as paho
-from paho.mqtt.client import MQTTMessage
 import config_parser
+from sense_emu import SenseHat
 
 
 class CarPark(mqtt_device.MqttDevice):
@@ -12,12 +11,13 @@ class CarPark(mqtt_device.MqttDevice):
         super().__init__(config)
         self.total_spaces = config["CarParks"][0]['total-spaces']
         self.total_cars = config["CarParks"][0]['total-cars']
-        self.client = paho.Client()
         self.client.on_message = self.on_message
         self.client.subscribe('sensor')
         self.client.subscribe('temperature')
-        self.client.loop_forever()
+        self.client.loop_start()
+        self.sense_hat = SenseHat()
         self._temperature = None
+        print("CarPark: MQTT Connection: ", self.client.is_connected())
 
     @property
     def available_spaces(self):
@@ -50,8 +50,9 @@ class CarPark(mqtt_device.MqttDevice):
         self.total_cars -= 1
         self._publish_event()
 
-    def on_message(self, client, userdata, msg: MQTTMessage):
+    def on_message(self, client, userdata, msg):
         payload = msg.payload.decode()
+        print(f"CarPark: Received MQTT message: {payload}")
         # self.temperature = ... # Extracted value
         # Extract temperature from payload
         if msg.topic == 'temperature':
@@ -60,8 +61,10 @@ class CarPark(mqtt_device.MqttDevice):
         if msg.topic == 'sensor':
             if 'exited' in payload:
                 self.on_car_exit()
+                print("exit")
             else:
                 self.on_car_entry()
+                print("enter")
 
 
 if __name__ == '__main__':

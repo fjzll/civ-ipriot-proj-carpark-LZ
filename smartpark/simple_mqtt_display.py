@@ -10,8 +10,9 @@ class Display(mqtt_device.MqttDevice):
         super().__init__(config)
         self.client.on_message = self.on_message
         self.client.subscribe('display')
-        self.client.loop_forever()
+        self.client.loop_start()
         self.sense_hat = SenseHat()
+        print("Display: MQTT connection: ", self.client.is_connected())
 
     def display(self, *args):
         # Clear the SenseHat LED matrix
@@ -23,10 +24,12 @@ class Display(mqtt_device.MqttDevice):
         for val in args:
             self.sense_hat.show_message(val, scroll_speed=0.1, text_colour=yellow, back_colour=blue)
             time.sleep(1)
+            print(f"Display Class received: {val}")
         print('*' * 20)
 
     def on_message(self, client, userdata, msg):
         data = msg.payload.decode()
+        print("Display: MQTT message received: ", data)
         # Parse the message and extract free spaces, temperature, time
         current_time = data.split('TIME: ')[1].split(', ')[0]
         spaces = int(data.split('SPACES: ')[1].split(', ')[0])
@@ -40,5 +43,6 @@ if __name__ == '__main__':
     config = config_parser.parse_config('config.json')
     # Create an instance of Display class
     display = Display(config)
+    print("Display initialized")
 
 
