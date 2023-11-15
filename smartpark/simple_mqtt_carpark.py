@@ -14,10 +14,10 @@ class CarPark(mqtt_device.MqttDevice):
         self.client.on_message = self.on_message
         self.client.subscribe('sensor')
         self.client.subscribe('temperature')
-        self.client.loop_start()
         self.sense_hat = SenseHat()
         self._temperature = None
-        print("CarPark: MQTT Connection: ", self.client.is_connected())
+        self.client.loop_forever()
+        # print("CarPark: MQTT Connection: ", self.client.is_connected())
 
     @property
     def available_spaces(self):

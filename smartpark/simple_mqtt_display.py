@@ -10,9 +10,9 @@ class Display(mqtt_device.MqttDevice):
         super().__init__(config)
         self.client.on_message = self.on_message
         self.client.subscribe('display')
-        self.client.loop_start()
         self.sense_hat = SenseHat()
-        print("Display: MQTT connection: ", self.client.is_connected())
+        self.client.loop_forever()
+        # print("Display: MQTT connection: ", self.client.is_connected())
 
     def display(self, *args):
         # Clear the SenseHat LED matrix
