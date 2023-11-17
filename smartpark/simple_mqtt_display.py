@@ -30,12 +30,12 @@ class Display(mqtt_device.MqttDevice):
     def on_message(self, client, userdata, msg):
         data = msg.payload.decode()
         print("Display: MQTT message received: ", data)
-        # Parse the message and extract free spaces, temperature, time
+        # Parse the message and extract free spaces, temperature, time from payload data
         current_time = data.split('TIME: ')[1].split(', ')[0]
         spaces = int(data.split('SPACES: ')[1].split(', ')[0])
-        temperature = float(data.split('TEMPERATURE: ')[1].split(', ')[0])
+        temperature = data.split('TEMPERATURE: ')[1].split(', ')[0]
         # Display the extracted values on Sense Hat emulator
-        self.display(f"Time: {current_time}", f"Spaces: {spaces}", f"Temperature: {temperature}°C")
+        self.display(f"Time: {current_time}", f"Spaces: {spaces}", f"Temperature: {temperature}")
 
 
 if __name__ == '__main__':
@@ -43,6 +43,6 @@ if __name__ == '__main__':
     config = config_parser.parse_config('config.json')
     # Create an instance of Display class
     display = Display(config)
-    print("Display initialized")
+    # print("Display initialized")
 
 

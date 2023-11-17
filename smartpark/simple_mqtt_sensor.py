@@ -23,10 +23,11 @@ class Sensor(mqtt_device.MqttDevice):
 
     def on_detection(self, message):
         """Triggered when a detection occurs"""
-        temperature = self.read_temperature
-        self.client.publish('temperature', str(temperature))
-        self.client.publish('sensor', message)
+        print("Detection Message:", message)
+        # temperature = self.read_temperature
+        # self.client.publish('temperature', str(temperature))
         print("Sensor: publishing sensor event: ", message)
+        self.client.publish('sensor', message)
         print("MQTT messages published")
 
     def start_sensing(self):
