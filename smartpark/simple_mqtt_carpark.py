@@ -14,7 +14,7 @@ class CarPark(mqtt_device.MqttDevice):
         self.total_cars = config["CarParks"][0]['total-cars']
         self.client.on_message = self.on_message
         self.client.subscribe('sensor')
-        # self.client.subscribe('temperature')
+        self.client.subscribe('temperature')
         self.sense_hat = SenseHat()
         self._temperature = None
         self.client.loop_forever()
@@ -56,17 +56,16 @@ class CarPark(mqtt_device.MqttDevice):
         payload = msg.payload.decode()
         print(f"CarPark: Received MQTT message: {payload}")
         # Extract the temperature value from payload
-        parts = payload.split(',')
-        temperature = float(parts[1])
-        # if msg.topic == 'temperature':
-            # self.temperature = float(payload)
-        # if msg.topic == 'sensor':
-        if 'exited' in payload:
-            self.on_car_exit()
-            # print("exit")
-        else:
-            self.on_car_entry()
-            # print("enter")
+        if msg.topic == 'temperature':
+            self.temperature = float(payload)
+            print("CarPark temperature update: ", self.temperature)
+        if msg.topic == 'sensor':
+            if 'exited' in payload:
+                self.on_car_exit()
+                # print("exit")
+            else:
+                self.on_car_entry()
+                # print("enter")
 
 
 if __name__ == '__main__':

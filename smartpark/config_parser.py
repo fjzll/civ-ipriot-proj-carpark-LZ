@@ -34,7 +34,7 @@ Finally, you can use `yaml` if you prefer.
 import json
 
 
-def parse_config(config_file_path='config.json'):
+def parse_config(config_file_path='smartpark/config.json'):
     # read and pase the config file from config.json file
     with open(config_file_path, 'r') as config_file:
         config_data = json.load(config_file)
