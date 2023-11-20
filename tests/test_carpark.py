@@ -2,7 +2,8 @@ import unittest
 from smartpark.simple_mqtt_carpark import CarPark
 from smartpark.simple_mqtt_sensor import Sensor
 from smartpark.simple_mqtt_display import Display
-from smartpark.config_parser import parse_config
+from smartpark.config_parser import Config
+from smartpark import mqtt_device
 
 
 class TestCarPark(unittest.TestCase):
@@ -13,7 +14,9 @@ class TestCarPark(unittest.TestCase):
         Set up the test environment
         """
         # Read configuration from "config.json" and create a CarPark instance for tests
-        self.car_park = CarPark(parse_config("config.json"))
+        config_instance = Config()
+        self.config = config_instance.parse_config("smartpark/config.json")
+        self.car_park = CarPark(self.config)
 
     def test_car_park_is_instantiated(self):
         """
@@ -25,13 +28,13 @@ class TestCarPark(unittest.TestCase):
         """
         Test if a Sensor instance is instantiated correctly
         """
-        self.assertIsInstance(Sensor(parse_config("config.json")), Sensor)
+        self.assertIsInstance(Sensor(self.config), Sensor)
 
     def test_display_is_instantiated(self):
         """
         Test if a Display instance is instantiated correctly
         """
-        self.assertIsInstance(Display(parse_config("config.json")), Display)
+        self.assertIsInstance(Display(self.config), Display)
 
     def test_available_spaces_within_capacity(self):
         """
@@ -39,7 +42,6 @@ class TestCarPark(unittest.TestCase):
         the number of cars is less than the total spaces.
         """
         self.car_park.total_cars = 25
-        self.car_park.available_spaces()
         expected_available_spaces = max(0, self.car_park.total_spaces - self.car_park.total_cars)
         # Assert that the actual and expect available spaces match
         self.assertEqual(self.car_park.available_spaces, expected_available_spaces)
@@ -59,4 +61,3 @@ class TestCarPark(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

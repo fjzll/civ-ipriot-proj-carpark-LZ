@@ -1,7 +1,7 @@
 from datetime import datetime
 import mqtt_device
 import paho.mqtt.client as paho
-import config_parser
+from config_parser import Config
 from sense_emu import SenseHat
 
 
@@ -10,6 +10,7 @@ class CarPark(mqtt_device.MqttDevice):
 
     def __init__(self, config):
         super().__init__(config)
+        self.config = config
         self.total_spaces = config["CarParks"][0]['total-spaces']
         self.total_cars = config["CarParks"][0]['total-cars']
         self.client.on_message = self.on_message
@@ -17,8 +18,10 @@ class CarPark(mqtt_device.MqttDevice):
         self.client.subscribe('temperature')
         self.sense_hat = SenseHat()
         self._temperature = None
-        self.client.loop_forever()
-        # print("CarPark: MQTT Connection: ", self.client.is_connected())
+
+        if __name__ == '__main__':
+            self.client.loop_forever()
+            # print("CarPark: MQTT Connection: ", self.client.is_connected())
 
     @property
     def available_spaces(self):
@@ -46,10 +49,14 @@ class CarPark(mqtt_device.MqttDevice):
 
     def on_car_entry(self):
         self.total_cars += 1
+        # Update the available spaces in the configuration
+        self.config['CarParks'][0]['available-spaces'] = self.available_spaces
         self._publish_event()
 
     def on_car_exit(self):
         self.total_cars -= 1
+        # Update the configuration spaces in the configuration
+        self.config['CarParks'][0]['available-spaces'] = self.available_spaces
         self._publish_event()
 
     def on_message(self, client, userdata, msg):
@@ -70,6 +77,7 @@ class CarPark(mqtt_device.MqttDevice):
 
 if __name__ == '__main__':
     # Read config using the parse_config function from config_parser module
-    config = config_parser.parse_config('config.json')
-    car_park = CarPark(config)
+    config = Config()
+    config_data = config.parse_config('config.json')
+    car_park = CarPark(config_data)
     # print("Car park initialized")

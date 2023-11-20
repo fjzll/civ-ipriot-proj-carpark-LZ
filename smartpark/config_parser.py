@@ -32,12 +32,26 @@ Finally, you can use `yaml` if you prefer.
 """
 
 import json
+import os.path
 
 
-def parse_config(config_file_path='smartpark/config.json'):
-    # read and pase the config file from config.json file
-    with open(config_file_path, 'r') as config_file:
-        config_data = json.load(config_file)
-    """Parse the config file and return the values as a dictionary"""
-    # return the configuration from config.json file
-    return config_data
+class Config:
+
+    def __init__(self):
+        self.config = None
+
+    def parse_config(self, config_file_path='config.json'):
+        # read and pase the config file from config.json file
+        with open(config_file_path, 'r') as config_file:
+            config_data = json.load(config_file)
+        """Parse the config file and return the values as a dictionary"""
+        # return the configuration from config.json file
+        return config_data
+
+    def write_config(self, config_file_parth='config.json'):
+        # Write the updated configuration data to config.json
+        with open(config_file_path, 'w') as config_file:
+            json.dump(self.config, config_file)
+
+
+

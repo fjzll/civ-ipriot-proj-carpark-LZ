@@ -1,7 +1,7 @@
 import mqtt_device
 import time
 from sense_emu import SenseHat
-import config_parser
+from config_parser import Config
 
 
 class Display(mqtt_device.MqttDevice):
@@ -11,8 +11,10 @@ class Display(mqtt_device.MqttDevice):
         self.client.on_message = self.on_message
         self.client.subscribe('display')
         self.sense_hat = SenseHat()
-        self.client.loop_forever()
-        # print("Display: MQTT connection: ", self.client.is_connected())
+
+        if __name__ == '__main__':
+            self.client.loop_forever()
+            # print("Display: MQTT connection: ", self.client.is_connected())
 
     def display(self, *args):
         # Clear the SenseHat LED matrix
@@ -40,9 +42,10 @@ class Display(mqtt_device.MqttDevice):
 
 if __name__ == '__main__':
     # Read config from config.json file by calling the parse_config method
-    config = config_parser.parse_config('config.json')
+    config = Config()
+    config_data = config.parse_config('config.json')
     # Create an instance of Display class
-    display = Display(config)
+    display = Display(config_data)
     # print("Display initialized")
 
 

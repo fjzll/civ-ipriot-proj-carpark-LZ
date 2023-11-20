@@ -2,7 +2,7 @@
 a publication via mqtt"""
 from sense_emu import SenseHat
 import mqtt_device
-import config_parser
+from config_parser import Config
 from datetime import datetime
 
 
@@ -14,6 +14,9 @@ class Sensor(mqtt_device.MqttDevice):
         # Create an instance for SenseHat object
         self.sense_hat = SenseHat()
         print("Sensor: MQTT Connection: ", self.client.is_connected())
+
+        if __name__ == '__main':
+            self.start_sensing()
 
     @property
     def read_temperature(self):
@@ -47,9 +50,10 @@ class Sensor(mqtt_device.MqttDevice):
 
 if __name__ == '__main__':
     # Read previous config from file instead of embedding
-    config1 = config_parser.parse_config('config.json')
+    config = Config()
+    config_data = config.parse_config('config.json')
     # Create an instance for the Sensor class
-    sensor1 = Sensor(config1)
+    sensor1 = Sensor(config_data)
     print("Sensor initialized")
     # Start the sensing loop
     sensor1.start_sensing()
