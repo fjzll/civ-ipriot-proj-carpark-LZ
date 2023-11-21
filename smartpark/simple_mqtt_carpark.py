@@ -3,6 +3,7 @@ import mqtt_device
 import paho.mqtt.client as paho
 from config_parser import Config
 from sense_emu import SenseHat
+import json
 
 
 class CarPark(mqtt_device.MqttDevice):
@@ -51,12 +52,16 @@ class CarPark(mqtt_device.MqttDevice):
         self.total_cars += 1
         # Update the available spaces in the configuration
         self.config['CarParks'][0]['available-spaces'] = self.available_spaces
+        with open('config.json', 'w') as config_file:
+            json.dump(self.config, config_file, indent=2)
         self._publish_event()
 
     def on_car_exit(self):
         self.total_cars -= 1
         # Update the configuration spaces in the configuration
         self.config['CarParks'][0]['available-spaces'] = self.available_spaces
+        with open('config.json', 'w') as config_file:
+            json.dump(self.config, config_file, indent=2)
         self._publish_event()
 
     def on_message(self, client, userdata, msg):

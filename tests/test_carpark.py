@@ -3,7 +3,7 @@ from smartpark.simple_mqtt_carpark import CarPark
 from smartpark.simple_mqtt_sensor import Sensor
 from smartpark.simple_mqtt_display import Display
 from smartpark.config_parser import Config
-from smartpark import mqtt_device
+from smartpark.mqtt_device import MqttDevice
 
 
 class TestCarPark(unittest.TestCase):

@@ -41,17 +41,20 @@ class Config:
         self.config = None
 
     def parse_config(self, config_file_path='config.json'):
+        """Parse the config file and return the values as a dictionary"""
         # read and pase the config file from config.json file
         with open(config_file_path, 'r') as config_file:
-            config_data = json.load(config_file)
-        """Parse the config file and return the values as a dictionary"""
+            self.config = json.load(config_file)
         # return the configuration from config.json file
-        return config_data
+        return self.config
 
-    def write_config(self, config_file_parth='config.json'):
-        # Write the updated configuration data to config.json
-        with open(config_file_path, 'w') as config_file:
-            json.dump(self.config, config_file)
+    # def write_config(self, config_file_parth='config.json'):
+    # Write the updated configuration data to config.json
+    # with open(config_file_path, 'w') as config_file:
+    # json.dump(self.config, config_file)
 
 
-
+config_instance = Config()
+print(config_instance.config)
+config_data = config_instance.parse_config()
+print(config_data)

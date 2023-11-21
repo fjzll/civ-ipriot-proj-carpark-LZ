@@ -7,8 +7,13 @@ from datetime import datetime
 
 
 class Sensor(mqtt_device.MqttDevice):
+    """
+    Represents a sensor that listens for events and publishes events via MQTT
+    """
     def __init__(self, config):
-        # Initialise the Sensor class with MQTT super class configuration
+        """
+        Initialise the Sensor class with MQTT super class configuration.
+        """
         super().__init__(config)
         self.client.loop_start()
         # Create an instance for SenseHat object
@@ -26,16 +31,20 @@ class Sensor(mqtt_device.MqttDevice):
 
     def on_detection(self, message):
         """Triggered when a detection occurs"""
-        print("Detection Message:", message)
-        # temperature = self.read_temperature
-        # self.client.publish('temperature', str(temperature))
-        print("Sensor: publishing sensor event: ", message)
+        # print("Detection Message:", message)
+        temperature = self.read_temperature
+        self.client.publish('temperature', temperature)
+        # print("Sensor: publishing sensor event: ", message)
         self.client.publish('sensor', message)
-        print("MQTT messages published")
+        # print("MQTT messages published")
 
     def start_sensing(self):
-        """ A blocking event loop that waits for detection events, in this
-        case Enter presses"""
+        """ A blocking event loop that waits for detection events.
+        The function prompts users inputs to represent sensing car
+        entering and exiting. Input 'E' for car entry and 'X' for
+        car exit. It then publishes messages by calling on_detection
+        method.
+        """
         while True:
             print("Press E when car entered!")
             print("Press X when car exited!")
