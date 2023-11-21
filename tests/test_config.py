@@ -4,6 +4,7 @@ from smartpark.config_parser import Config
 
 
 class TestConfigParsing(unittest.TestCase):
+    """Test case for the Config class"""
     def test_parse_config_has_correct_location_and_spaces(self):
         # read from a configuration file
         with open('smartpark/config.json', 'r') as file:

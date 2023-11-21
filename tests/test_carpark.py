@@ -20,7 +20,7 @@ class TestCarPark(unittest.TestCase):
 
     def test_car_park_is_instantiated(self):
         """
-        Test is a CarPark instance is instantiated
+        Test if a CarPark instance is instantiated
         """
         self.assertIsInstance(self.car_park, CarPark)
 

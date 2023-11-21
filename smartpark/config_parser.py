@@ -32,12 +32,13 @@ Finally, you can use `yaml` if you prefer.
 """
 
 import json
-import os.path
 
 
 class Config:
+    """Handle the parsing the configuration file: config.json"""
 
     def __init__(self):
+        """Initializes the Config class."""
         self.config = None
 
     def parse_config(self, config_file_path='config.json'):
@@ -48,13 +49,4 @@ class Config:
         # return the configuration from config.json file
         return self.config
 
-    # def write_config(self, config_file_parth='config.json'):
-    # Write the updated configuration data to config.json
-    # with open(config_file_path, 'w') as config_file:
-    # json.dump(self.config, config_file)
 
-
-config_instance = Config()
-print(config_instance.config)
-config_data = config_instance.parse_config()
-print(config_data)

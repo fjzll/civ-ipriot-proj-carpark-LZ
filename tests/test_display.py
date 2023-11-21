@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, patch
 
 
 class TestDisplay(unittest.TestCase):
+    """Test case for the display method in Display class"""
 
     def setUp(self):
         """

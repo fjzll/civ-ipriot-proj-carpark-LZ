@@ -7,9 +7,17 @@ import json
 
 
 class CarPark(mqtt_device.MqttDevice):
-    """Creates a car park object to store the state of cars in the lot"""
+    """
+    Represents a car park object to store the state of cars in the lot.
+    Manages car entries, exits and calculates available parking spaces.
+    Listens to sensor events and publishes to display topic via MQTT.
+    Update the available spaces and write it to the configuration file.
+    """
 
     def __init__(self, config):
+        """
+        Initialize the CarPark class with MQTT super class configuration.
+        """
         super().__init__(config)
         self.config = config
         self.total_spaces = config["CarParks"][0]['total-spaces']
@@ -26,19 +34,23 @@ class CarPark(mqtt_device.MqttDevice):
 
     @property
     def available_spaces(self):
+        """Return the number of available parking spaces."""
         available = self.total_spaces - self.total_cars
         return max(available, 0)
 
     @property
     def temperature(self):
+        """Return the temperature from Sense Hat"""
         return self._temperature
 
     @temperature.setter
     def temperature(self, value):
+        """Set the temperature and publishes the event"""
         self._temperature = value
         self._publish_event()
         
     def _publish_event(self):
+        """Publishes the display event with time, available spaces and temperature"""
         readable_time = datetime.now().strftime('%H:%M')
         message = (
             f"TIME: {readable_time}, "
@@ -49,6 +61,11 @@ class CarPark(mqtt_device.MqttDevice):
         self.client.publish('display', message)
 
     def on_car_entry(self):
+        """
+        Update the available spaces when a car enters and write it to
+        the config.json file.
+        Publish the display events when a car enters.
+        """
         self.total_cars += 1
         # Update the available spaces in the configuration
         self.config['CarParks'][0]['available-spaces'] = self.available_spaces
@@ -57,6 +74,11 @@ class CarPark(mqtt_device.MqttDevice):
         self._publish_event()
 
     def on_car_exit(self):
+        """
+         Update the available spaces when a car exits and write it to
+         the config.json file.
+         Publish the display events when a car exits.
+         """
         self.total_cars -= 1
         # Update the configuration spaces in the configuration
         self.config['CarParks'][0]['available-spaces'] = self.available_spaces
@@ -65,8 +87,9 @@ class CarPark(mqtt_device.MqttDevice):
         self._publish_event()
 
     def on_message(self, client, userdata, msg):
+        """Callback to handle MQTT messages"""
         payload = msg.payload.decode()
-        print(f"CarPark: Received MQTT message: {payload}")
+        # print(f"CarPark: Received MQTT message: {payload}")
         # Extract the temperature value from payload
         if msg.topic == 'temperature':
             self.temperature = float(payload)
